@@ -1,0 +1,116 @@
+- Create database
+CREATE DATABASE store;
+
+- Select database
+use store;
+
+- Create a tables
+
+
+CREATE TABLE countries (
+    code int,
+    name varchar(20),
+    continent_name varchar(20),
+    PRIMARY KEY (code)
+);
+
+CREATE TABLE users (
+    id int,
+    full_name varchar(20),
+    email varchar(20),
+    gender char(1),
+    date_of_brith varchar(20),
+    created_at datetime,
+    country_code int,
+    PRIMARY KEY (id),
+
+    FOREIGN KEY (country_code) REFERENCES countries(code)
+);
+
+CREATE TABLE orders (
+    id int,
+	user_id int,
+    status varchar(6),
+    created_at datetime,
+    PRIMARY KEY (id),
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE order_products (
+	order_id int PRIMARY KEY,
+    product_id int,
+    quantity int,
+    
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+
+
+);
+
+CREATE TABLE products (
+	id int,
+    name varchar(10),
+    price int,
+    status varchar(10),
+    created_at datetime,
+    PRIMARY KEY (id)
+);
+
+
+
+- connect tables
+    FOREIGN KEY (country_code) REFERENCES countries(code)
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (order_id) REFERENCES orders(id)
+    FOREIGN KEY (product_id) REFERENCES products(id)
+
+
+- Add constraints
+
+- countries table
+ALTER TABLE countries ADD CONSTRAINT unique_name UNIQUE (name);
+ALTER TABLE countries MODIFY continent_name varchar(20) NOT NULL;
+
+- users table
+ALTER TABLE users ADD CONSTRAINT unique_email UNIQUE (email);
+ALTER TABLE users ADD CONSTRAINT CHK_gender CHECK (gender='m' OR gender='f')
+
+- orders table
+ALTER TABLE orders ADD CONSTRAINT CHK_status CHECK (status='start' OR status='finish')
+
+- order_products table
+ALTER TABLE order_products ALTER quantity SET DEFAULT 0;
+
+
+- products table
+ALTER TABLE products ALTER price SET DEFAULT 0;
+ALTER TABLE products MODIFY name varchar(10) NOT NULL;
+ALTER TABLE products ADD CONSTRAINT CHK_stat CHECK (status='valid' OR status='expired')
+
+-- Bouns--
+ALTER TABLE products ALTER created_at SET DEFAULT CURRENT_TIMESTAMP;
+
+
+- DML Commands
+
+#Add new row to the countries
+
+insert into countries(code,name,continent_name) values(1,'Saudi', 'Asia');
+
+#Add new row to the users
+
+insert into users(id,full_name,email,gender,date_of_brith,country_code) values(1, 'Nourah Jobran almalki', '1noura.j.m@gmail.com',f','11-05-1997',966);
+
+#Add new row to the orders
+
+insert into orders(id,user_id,status,created_at) values(1, 1, 'finished', '11-05-2022');
+
+#Add new row to the order_products
+
+insert into order_products(order_id,product_id,quantity) values(1, 1, 10);
+
+#Add new row to the order_products
+
+insert into products(id,name,price,status,created_at) values(1, 'Apple watch', 3500, 'finished', '11-05-2020');
+
